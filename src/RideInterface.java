@@ -1,12 +1,26 @@
 /**
- * Interface defining the core operations for a theme park ride.
- *
- * Concrete implementation will be provided by the Ride class.
+ * Ride 的接口，定义了等待队列、历史记录和运行一轮等操作。
+ * 对应作业 Part 2 中的接口要求。
  */
 public interface RideInterface {
 
-    // Method signatures for queue management, history management,
-    // running cycles and file I/O will be added in later commits.
+    // Part 3：排队队列
+    void addVisitorToQueue(Visitor visitor);
 
+    Visitor removeVisitorFromQueue();
+
+    void printQueue();
+
+    // Part 4A：历史记录
+    void addVisitorToHistory(Visitor visitor);
+
+    boolean checkVisitorFromHistory(Visitor visitor);
+
+    int numberOfVisitors();
+
+    void printRideHistory();
+
+    // Part 5：运行一轮
+    void runOneCycle();
 }
 
