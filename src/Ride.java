@@ -1,35 +1,34 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * 主题公园中的游乐项目。
- * 实现 RideInterface。
- *
- * 本类当前只完成基础属性和构造方法，
- * 队列、历史记录和 I/O 的具体逻辑将在后续提交中实现。
+ * 实现 RideInterface，并增加游客等待队列的管理。
  */
 public class Ride implements RideInterface {
 
-    private String name;         // 项目名称，例如 "Super Coaster"
-    private String type;         // 项目类型，例如 "Roller Coaster"
-    private double minHeight;    // 最低身高限制（米）
-    private Employee operator;   // 负责操作该项目的员工
+    private String name;
+    private String type;
+    private double minHeight;
+    private Employee operator;
+    private int maxRider;
+    private int numOfCycles;
 
-    private int maxRider;        // 每轮最多可以搭乘的游客数量（Part 5）
-    private int numOfCycles;     // 已经运行的轮数（Part 5）
-
-    public Ride() {
-        this.numOfCycles = 0;
-    }
+    // 队列管理：用 LinkedList 实现 Queue
+    private Queue<Visitor> waitingLine;
 
     public Ride(String name, String type, double minHeight,
                 Employee operator, int maxRider) {
-        this();
         this.name = name;
         this.type = type;
         this.minHeight = minHeight;
         this.operator = operator;
         this.maxRider = maxRider;
+        this.numOfCycles = 0;
+        this.waitingLine = new LinkedList<>(); // 初始化等待队列
     }
 
-    // ------------- Getter / Setter -------------
+    // ----------------- Getter / Setter -----------------
 
     public String getName() {
         return name;
@@ -94,57 +93,68 @@ public class Ride implements RideInterface {
         this.numOfCycles = numOfCycles;
     }
 
-    // ------------- 接口方法的占位实现 -------------
+    // ----------------- 队列管理方法 -----------------
 
     @Override
     public void addVisitorToQueue(Visitor visitor) {
-        // 占位实现：后续在 Part 3 中真正使用 Queue 来实现。
-        System.out.println("[TODO] addVisitorToQueue will be implemented in Part 3.");
+        if (visitor == null) {
+            System.out.println("Cannot add null visitor to the queue.");
+        } else {
+            waitingLine.offer(visitor);
+            System.out.println(visitor.getFullName() + " added to the waiting line.");
+        }
     }
 
     @Override
     public Visitor removeVisitorFromQueue() {
-        // 占位实现：后续在 Part 3 中真正从队列中移除。
-        System.out.println("[TODO] removeVisitorFromQueue will be implemented in Part 3.");
-        return null;
+        Visitor removedVisitor = waitingLine.poll();
+        if (removedVisitor == null) {
+            System.out.println("No visitors in the queue.");
+        } else {
+            System.out.println(removedVisitor.getFullName() + " removed from the waiting line.");
+        }
+        return removedVisitor;
     }
 
     @Override
     public void printQueue() {
-        // 占位实现：后续在 Part 3 中打印队列内容。
-        System.out.println("[TODO] printQueue will be implemented in Part 3.");
+        if (waitingLine.isEmpty()) {
+            System.out.println("The queue is empty.");
+        } else {
+            System.out.println("Current waiting line:");
+            for (Visitor v : waitingLine) {
+                System.out.println("- " + v.getFullName());
+            }
+        }
     }
+
+    // ----------------- RideInterface 方法 -----------------
 
     @Override
     public void addVisitorToHistory(Visitor visitor) {
-        // 占位实现：后续在 Part 4A 中用 LinkedList 记录历史。
-        System.out.println("[TODO] addVisitorToHistory will be implemented in Part 4A.");
+        // 留待后续实现
     }
 
     @Override
     public boolean checkVisitorFromHistory(Visitor visitor) {
-        // 占位实现：后续在 Part 4A 中真正检查历史。
-        System.out.println("[TODO] checkVisitorFromHistory will be implemented in Part 4A.");
+        // 留待后续实现
         return false;
     }
 
     @Override
     public int numberOfVisitors() {
-        // 占位实现：后续在 Part 4A 中返回历史中游客数量。
-        System.out.println("[TODO] numberOfVisitors will be implemented in Part 4A.");
+        // 留待后续实现
         return 0;
     }
 
     @Override
     public void printRideHistory() {
-        // 占位实现：后续在 Part 4A 中使用 Iterator 打印历史。
-        System.out.println("[TODO] printRideHistory will be implemented in Part 4A.");
+        // 留待后续实现
     }
 
     @Override
     public void runOneCycle() {
-        // 占位实现：后续在 Part 5 中实现完整逻辑。
-        System.out.println("[TODO] runOneCycle will be implemented in Part 5.");
+        // 留待后续实现
     }
 
     @Override
@@ -153,10 +163,11 @@ public class Ride implements RideInterface {
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", minHeight=" + minHeight +
-                ", operator=" + (operator != null ? operator.getFullName() : "none") +
+                ", operator=" + operator.getFullName() +
                 ", maxRider=" + maxRider +
                 ", numOfCycles=" + numOfCycles +
                 '}';
     }
 }
+
 
