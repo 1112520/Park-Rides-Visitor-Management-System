@@ -1,3 +1,5 @@
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -6,7 +8,8 @@ import java.util.Queue;
  * 主题公园中的游乐项目。
  * 实现 RideInterface，包含：
  * - 等待队列（Queue<Visitor> waitingLine） —— Part 3
- * - 游玩历史（LinkedList<Visitor> rideHistory） —— Part 4A
+ * - 游玩历史（LinkedList<Visitor> rideHistory） —— Part 4A/4B
+ * - 运行一轮游乐项目 —— Part 5
  */
 public class Ride implements RideInterface {
 
@@ -16,20 +19,20 @@ public class Ride implements RideInterface {
     private double minHeight;    // 最低身高限制（米）
     private Employee operator;   // 负责操作该项目的员工
 
-    // ---------- 运行属性（Part 5 会用到） ----------
+    // ---------- 运行属性（Part 5） ----------
     private int maxRider;        // 每轮最多可以搭乘的游客数量
     private int numOfCycles;     // 已经运行的轮数
 
     // ---------- 集合：等待队列（Part 3） ----------
     private Queue<Visitor> waitingLine;
 
-    // ---------- 集合：游玩历史（Part 4A） ----------
+    // ---------- 集合：游玩历史（Part 4A/4B） ----------
     private LinkedList<Visitor> rideHistory;
 
     // ---------- 构造方法 ----------
 
     /**
-     * 默认构造方法（作业要求必须有）。:contentReference[oaicite:2]{index=2}
+     * 默认构造方法（作业要求必须有）
      */
     public Ride() {
         this.numOfCycles = 0;
@@ -115,7 +118,9 @@ public class Ride implements RideInterface {
         this.numOfCycles = numOfCycles;
     }
 
-    // （可选）暴露只读的历史列表，用于 Part 4B 排序时使用
+    /**
+     * 只读访问 rideHistory，用于排序和演示
+     */
     public LinkedList<Visitor> getRideHistory() {
         return rideHistory;
     }
@@ -198,7 +203,7 @@ public class Ride implements RideInterface {
     }
 
     /**
-     * 使用 Iterator 打印 —— 作业明确要求。:contentReference[oaicite:3]{index=3}
+     * 使用 Iterator 打印历史记录（作业明确要求）
      */
     @Override
     public void printRideHistory() {
@@ -217,11 +222,51 @@ public class Ride implements RideInterface {
         }
     }
 
-    // ---------- Part 5：runOneCycle（暂时留空，下一次提交实现） ----------
+    // ---------- Part 4B：排序历史记录 ----------
+
+    /**
+     * 使用给定的 Comparator 对历史记录排序。
+     */
+    public void sortRideHistory(Comparator<Visitor> comparator) {
+        if (rideHistory.isEmpty()) {
+            System.out.println("Cannot sort ride history for " + name + " because it is empty.");
+            return;
+        }
+        Collections.sort(rideHistory, comparator);
+        System.out.println("Ride history for " + name + " has been sorted.");
+    }
+
+    // ---------- Part 5：运行一轮游乐项目 ----------
 
     @Override
     public void runOneCycle() {
-        System.out.println("[TODO] runOneCycle will be implemented in Part 5.");
+        // 这里先实现一个“正式版”，后面 Part 5 演示时直接调用
+        if (operator == null) {
+            System.out.println("Cannot run " + name + " because there is no operator assigned.");
+            return;
+        }
+        if (waitingLine.isEmpty()) {
+            System.out.println("Cannot run " + name + " because there are no waiting visitors.");
+            return;
+        }
+        if (maxRider <= 0) {
+            System.out.println("Cannot run " + name + " because maxRider is not set properly.");
+            return;
+        }
+
+        int ridersThisCycle = Math.min(maxRider, waitingLine.size());
+        System.out.println("Running one cycle of " + name
+                + " for " + ridersThisCycle + " visitors.");
+
+        for (int i = 0; i < ridersThisCycle; i++) {
+            Visitor v = waitingLine.poll();
+            if (v != null) {
+                addVisitorToHistory(v);
+            }
+        }
+
+        numOfCycles++;
+        System.out.println(name + " has now run " + numOfCycles + " cycle(s).");
     }
 
     @Override
@@ -236,6 +281,5 @@ public class Ride implements RideInterface {
                 '}';
     }
 }
-
 
 
