@@ -14,8 +14,9 @@ public class Visitor extends Person {
     public Visitor(String id, String fullName, int age,
                    String ticketType, boolean fastPass) {
         super(id, fullName, age);
-        this.ticketType = ticketType;
-        this.fastPass = fastPass;
+        // 使用 setter 保证校验
+        setTicketType(ticketType);
+        setFastPass(fastPass);
     }
 
     public String getTicketType() {

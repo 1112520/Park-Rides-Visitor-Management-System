@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 /**
  * 抽象的人员基类。
  * Employee 和 Visitor 都从这里继承通用属性。
@@ -19,8 +21,9 @@ public abstract class Person {
      * 带参数构造方法，设置所有字段。
      */
     public Person(String id, String fullName, int age) {
-        this.id = id;
-        this.fullName = fullName;
+        // 使用 setter，保证走统一的校验逻辑
+        setId(id);
+        setFullName(fullName);
         setAge(age);
     }
 
@@ -31,7 +34,7 @@ public abstract class Person {
     }
 
     public void setId(String id) {
-        // 可以简单校验一下，保证不是 null 或空字符串
+        // 简单校验一下，保证不是 null 或空字符串
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("id cannot be null or blank");
         }
@@ -73,4 +76,23 @@ public abstract class Person {
                 ", age=" + age +
                 '}';
     }
+
+    // ----------------- equals / hashCode -----------------
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // 同一个对象
+        if (o == null || getClass() != o.getClass()) return false; // 必须是同一个具体类
+        Person person = (Person) o;
+        // 只根据 id 判断是否相等
+        return Objects.equals(id, person.id);
+    }
+
+    @Override
+    public int hashCode() {
+        // 与 equals 一致：同样只根据 id 生成 hash
+        return Objects.hash(id);
+    }
 }
+
+

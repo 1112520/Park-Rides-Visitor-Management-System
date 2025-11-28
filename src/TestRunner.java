@@ -1,12 +1,9 @@
-/**
- * Simple test runner for manual testing.
- *
- * Individual test classes for Ride, Visitor and Employee will be added later.
- */
 public class TestRunner {
 
     public static void main(String[] args) {
-        System.out.println("Test runner initialised.");
-        // TODO: invoke individual test classes once they are implemented.
+        // 依次运行两个简单测试
+        SimpleTest.main(args);
+        VisitorComparatorTest.main(args);
+        System.out.println("All manual tests finished.");
     }
 }
