@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -10,6 +15,7 @@ import java.util.Queue;
  * - 等待队列（Queue<Visitor> waitingLine） —— Part 3
  * - 游玩历史（LinkedList<Visitor> rideHistory） —— Part 4A/4B
  * - 运行一轮游乐项目 —— Part 5
+ * - 导入导出历史记录 —— Part 6/7
  */
 public class Ride implements RideInterface {
 
@@ -240,7 +246,7 @@ public class Ride implements RideInterface {
 
     @Override
     public void runOneCycle() {
-        // Part 5 核心逻辑：从队列中取出最多 maxRider 个游客，加入历史记录
+        // 从等待队列中取出最多 maxRider 个游客，加入历史记录
         if (operator == null) {
             System.out.println("Cannot run " + name + " because there is no operator assigned.");
             return;
@@ -267,6 +273,76 @@ public class Ride implements RideInterface {
 
         numOfCycles++;
         System.out.println(name + " has now run " + numOfCycles + " cycle(s).");
+    }
+
+    // ---------- Part 6：导出历史记录到 CSV 文件 ----------
+
+    /**
+     * 将 rideHistory 导出为简单的 CSV 文件。
+     * 每行格式：id,fullName,age,ticketType,fastPass
+     */
+    public void exportRideHistory(String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            // 写表头（可选）
+            writer.write("id,fullName,age,ticketType,fastPass");
+            writer.newLine();
+
+            for (Visitor v : rideHistory) {
+                String line = String.format("%s,%s,%d,%s,%b",
+                        v.getId(),
+                        v.getFullName(),
+                        v.getAge(),
+                        v.getTicketType(),
+                        v.isFastPass());
+                writer.write(line);
+                writer.newLine();
+            }
+
+            System.out.println("Ride history for " + name + " has been exported to file: " + fileName);
+        } catch (IOException e) {
+            System.out.println("Error while exporting ride history to file " + fileName + ": " + e.getMessage());
+        }
+    }
+
+    // ---------- Part 7：从 CSV 文件导入历史记录 ----------
+
+    /**
+     * 从 CSV 文件导入 rideHistory，文件格式需与 exportRideHistory 输出一致。
+     * 导入前会清空当前历史记录。
+     */
+    public void importRideHistory(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            // 清空旧的历史记录
+            rideHistory.clear();
+
+            String line = reader.readLine(); // 先读表头
+            // 逐行读取数据
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+                String[] parts = line.split(",");
+                if (parts.length != 5) {
+                    System.out.println("Invalid line in file (skip): " + line);
+                    continue;
+                }
+
+                String id = parts[0];
+                String fullName = parts[1];
+                int age = Integer.parseInt(parts[2]);
+                String ticketType = parts[3];
+                boolean fastPass = Boolean.parseBoolean(parts[4]);
+
+                Visitor v = new Visitor(id, fullName, age, ticketType, fastPass);
+                addVisitorToHistory(v);
+            }
+
+            System.out.println("Ride history for " + name + " has been imported from file: " + fileName);
+        } catch (IOException e) {
+            System.out.println("Error while importing ride history from file " + fileName + ": " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing number in file " + fileName + ": " + e.getMessage());
+        }
     }
 
     @Override
