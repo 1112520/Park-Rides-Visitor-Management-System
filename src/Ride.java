@@ -240,7 +240,7 @@ public class Ride implements RideInterface {
 
     @Override
     public void runOneCycle() {
-        // 这里先实现一个“正式版”，后面 Part 5 演示时直接调用
+        // Part 5 核心逻辑：从队列中取出最多 maxRider 个游客，加入历史记录
         if (operator == null) {
             System.out.println("Cannot run " + name + " because there is no operator assigned.");
             return;
@@ -281,5 +281,3 @@ public class Ride implements RideInterface {
                 '}';
     }
 }
-
-
