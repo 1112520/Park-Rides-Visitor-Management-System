@@ -1,16 +1,15 @@
 public class AssignmentTwo {
 
     public static void main(String[] args) {
-        System.out.println("Park Rides Visitor Management System initialised.");
+        System.out.println("Park Rides Visitor Management System initialised.\n");
 
-        // 按作业要求：在 main 里创建 AssignmentTwo 对象，然后依次调用各个 part 方法
-        AssignmentTwo demo = new AssignmentTwo();
-        demo.partThree();
-        demo.partFourA();
-        demo.partFourB();
-        demo.partFive();   // Part 5：runOneCycle 演示
-        demo.partSix();    // Part 6：导出 CSV
-        demo.partSeven();  // Part 7：导入 CSV
+        AssignmentTwo a2 = new AssignmentTwo();
+        a2.partThree();
+        a2.partFourA();
+        a2.partFourB();
+        a2.partFive();
+        a2.partSix();
+        a2.partSeven();
     }
 
     // ------------------- Part 3：队列演示 -------------------
@@ -141,112 +140,88 @@ public class AssignmentTwo {
     // ------------------- Part 5：runOneCycle 演示 -------------------
 
     /**
-     * Part 5：演示 runOneCycle 的行为：
-     *  - 创建一个 Ride，设置 maxRider
-     *  - 向等待队列加入多于一轮的游客（例如 7 个，maxRider=3）
-     *  - 连续运行几轮，观察队列与历史记录的变化
+     * Part 5：演示 runOneCycle 的行为
+     * 按照作业要求创建10个Visitor并演示完整流程
      */
     public void partFive() {
         System.out.println("\n===== Part 5: Demonstrating runOneCycle =====");
 
-        Employee operator = new Employee("E301", "Nina Operator", 32,
-                "Ride Operator", 31.5);
+        Employee op = new Employee("E100", "Operator One", 30,
+                "Ride Operator", 5); // 按你自己的 Employee 构造器来
+        Ride ride = new Ride("Cyclone", "Roller Coaster", 1.2, op, 4); 
+        // maxRider = 4，表示每轮最多 4 人
 
-        // maxRider 设为 3，这样一轮最多 3 人
-        Ride ride = new Ride("Thunder Drop", "Free Fall",
-                1.3, operator, 3);
+        // 1. 加 10 个游客进队列
+        ride.addVisitorToQueue(new Visitor("P001", "Visitor 1", 20, "Adult", false));
+        ride.addVisitorToQueue(new Visitor("P002", "Visitor 2", 22, "Adult", true));
+        ride.addVisitorToQueue(new Visitor("P003", "Visitor 3", 11, "Child", false));
+        ride.addVisitorToQueue(new Visitor("P004", "Visitor 4", 35, "Adult", false));
+        ride.addVisitorToQueue(new Visitor("P005", "Visitor 5", 28, "Adult", true));
+        ride.addVisitorToQueue(new Visitor("P006", "Visitor 6", 17, "Student", false));
+        ride.addVisitorToQueue(new Visitor("P007", "Visitor 7", 40, "VIP", true));
+        ride.addVisitorToQueue(new Visitor("P008", "Visitor 8", 15, "Child", false));
+        ride.addVisitorToQueue(new Visitor("P009", "Visitor 9", 19, "Student", false));
+        ride.addVisitorToQueue(new Visitor("P010", "Visitor 10", 27, "Adult", false));
 
-        // 向队列添加 7 个游客
-        ride.addVisitorToQueue(new Visitor("C001", "Tom Rider",    19, "Adult",  true));
-        ride.addVisitorToQueue(new Visitor("C002", "Bella Rider",  21, "Adult",  false));
-        ride.addVisitorToQueue(new Visitor("C003", "Chris Rider",  16, "Teen",   true));
-        ride.addVisitorToQueue(new Visitor("C004", "Dora Rider",   11, "Child",  false));
-        ride.addVisitorToQueue(new Visitor("C005", "Ethan Rider",  35, "Adult",  false));
-        ride.addVisitorToQueue(new Visitor("C006", "Fiona Rider",  28, "Adult",  true));
-        ride.addVisitorToQueue(new Visitor("C007", "George Rider", 14, "Teen",   false));
-
-        System.out.println("Initial waiting line:");
+        System.out.println("\nQueue BEFORE running one cycle:");
         ride.printQueue();
 
-        // 第一轮
-        System.out.println("\n-- Running first cycle --");
+        // 2. 跑一轮
+        System.out.println();
         ride.runOneCycle();
-        System.out.println("Waiting line after first cycle:");
-        ride.printQueue();
-        System.out.println("Ride history after first cycle:");
-        ride.printRideHistory();
 
-        // 第二轮
-        System.out.println("\n-- Running second cycle --");
-        ride.runOneCycle();
-        System.out.println("Waiting line after second cycle:");
+        // 3. 再打印队列和历史记录
+        System.out.println("\nQueue AFTER running one cycle:");
         ride.printQueue();
-        System.out.println("Ride history after second cycle:");
-        ride.printRideHistory();
 
-        // 第三轮（可能此时队列不足一整轮）
-        System.out.println("\n-- Running third cycle --");
-        ride.runOneCycle();
-        System.out.println("Waiting line after third cycle:");
-        ride.printQueue();
-        System.out.println("Ride history after third cycle:");
+        System.out.println("\nRide history AFTER running one cycle:");
         ride.printRideHistory();
     }
 
     // ------------------- Part 6：导出历史记录到 CSV -------------------
 
     /**
-     * Part 6：演示 exportRideHistory：
-     *  - 创建一个 Ride
-     *  - 向历史记录添加若干游客
-     *  - 调用 exportRideHistory("rideHistory.csv")
+     * Part 6：演示 exportRideHistory
      */
     public void partSix() {
-        System.out.println("\n===== Part 6: Exporting ride history to CSV =====");
+        System.out.println("\n===== Part 6: Export ride history to file =====");
 
-        Employee operator = new Employee("E401", "Oscar Operator", 29,
-                "Ride Operator", 29.0);
+        Employee op = new Employee("E200", "File Operator", 32,
+                "Ride Operator", 4);
+        Ride ride = new Ride("File Ride", "Water Ride", 1.0, op, 4);
 
-        Ride ride = new Ride("Ocean Spin", "Family Ride",
-                1.1, operator, 5);
+        // 往历史里直接加至少 5 个游客
+        ride.addVisitorToHistory(new Visitor("F001", "File Visitor 1", 21, "Adult", false));
+        ride.addVisitorToHistory(new Visitor("F002", "File Visitor 2", 30, "Adult", true));
+        ride.addVisitorToHistory(new Visitor("F003", "File Visitor 3", 16, "Student", false));
+        ride.addVisitorToHistory(new Visitor("F004", "File Visitor 4", 12, "Child", false));
+        ride.addVisitorToHistory(new Visitor("F005", "File Visitor 5", 40, "VIP", true));
 
-        // 准备一些已经玩过的游客
-        ride.addVisitorToHistory(new Visitor("H101", "Alice Ocean", 26, "Adult",  true));
-        ride.addVisitorToHistory(new Visitor("H102", "Bob Ocean",    7, "Child",  false));
-        ride.addVisitorToHistory(new Visitor("H103", "Cindy Ocean", 34, "Adult",  false));
-        ride.addVisitorToHistory(new Visitor("H104", "David Ocean", 15, "Teen",   true));
-
-        System.out.println("Current ride history before export:");
-        ride.printRideHistory();
-
-        String filePath = "rideHistory.csv";
-        ride.exportRideHistory(filePath);
+        // 导出到当前工程目录下的一个 csv 文件
+        String fileName = "ride_history.csv";
+        ride.exportRideHistory(fileName);
     }
 
-    // ------------------- Part 7：从 CSV 导入历史记录 -------------------
+    // ------------------- Part 7：从 CSV 文件导入历史记录 -------------------
 
     /**
-     * Part 7：演示 importRideHistory：
-     *  - 创建一个新的 Ride（历史记录为空）
-     *  - 调用 importRideHistory("rideHistory.csv")
-     *  - 打印导入后的历史记录
-     *
-     * 注意：需要先在 Part 6 中成功导出 rideHistory.csv 文件。
+     * Part 7：演示 importRideHistory
      */
     public void partSeven() {
-        System.out.println("\n===== Part 7: Importing ride history from CSV =====");
+        System.out.println("\n===== Part 7: Import ride history from file =====");
 
-        Employee operator = new Employee("E402", "Paula Operator", 27,
-                "Ride Operator", 28.0);
+        Employee op = new Employee("E201", "Import Operator", 29,
+                "Ride Operator", 4);
+        Ride ride = new Ride("Import Ride", "Family Ride", 1.1, op, 4);
 
-        Ride ride = new Ride("Ocean Spin (Imported)", "Family Ride",
-                1.1, operator, 5);
+        String fileName = "ride_history.csv"; // 要和 partSix 里保持一致
 
-        String filePath = "rideHistory.csv";
-        ride.importRideHistory(filePath);
+        ride.importRideHistory(fileName);
 
-        System.out.println("Ride history after import:");
-        ride.printRideHistory();
+        System.out.println("\nNumber of visitors imported into ride history:");
         ride.numberOfVisitors();
+
+        System.out.println("\nVisitors imported into ride history:");
+        ride.printRideHistory();
     }
 }

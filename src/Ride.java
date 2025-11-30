@@ -282,6 +282,11 @@ public class Ride implements RideInterface {
      * 每行格式：id,fullName,age,ticketType,fastPass
      */
     public void exportRideHistory(String fileName) {
+        if (rideHistory.isEmpty()) {
+            System.out.println("No visitors in ride history of " + name + " to export.");
+            return;
+        }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             // 写表头（可选）
             writer.write("id,fullName,age,ticketType,fastPass");
@@ -300,7 +305,7 @@ public class Ride implements RideInterface {
 
             System.out.println("Ride history for " + name + " has been exported to file: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error while exporting ride history to file " + fileName + ": " + e.getMessage());
+            System.out.println("Error exporting ride history to file: " + e.getMessage());
         }
     }
 
@@ -311,25 +316,30 @@ public class Ride implements RideInterface {
      * 导入前会清空当前历史记录。
      */
     public void importRideHistory(String fileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            // 清空旧的历史记录
-            rideHistory.clear();
+        rideHistory.clear(); // 先清空当前历史
 
-            String line = reader.readLine(); // 先读表头
-            // 逐行读取数据
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine(); // 先读掉表头
+
             while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) {
+                if (line.isBlank()) {
                     continue;
                 }
                 String[] parts = line.split(",");
                 if (parts.length != 5) {
-                    System.out.println("Invalid line in file (skip): " + line);
+                    System.out.println("Invalid line in file, skipped: " + line);
                     continue;
                 }
 
                 String id = parts[0];
                 String fullName = parts[1];
-                int age = Integer.parseInt(parts[2]);
+                int age;
+                try {
+                    age = Integer.parseInt(parts[2]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid age value for line, skipped: " + line);
+                    continue;
+                }
                 String ticketType = parts[3];
                 boolean fastPass = Boolean.parseBoolean(parts[4]);
 
@@ -339,9 +349,7 @@ public class Ride implements RideInterface {
 
             System.out.println("Ride history for " + name + " has been imported from file: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error while importing ride history from file " + fileName + ": " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Error parsing number in file " + fileName + ": " + e.getMessage());
+            System.out.println("Error importing ride history from file: " + e.getMessage());
         }
     }
 
