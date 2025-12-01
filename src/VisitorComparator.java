@@ -1,22 +1,22 @@
 import java.util.Comparator;
 
 /**
- * 用于对 Visitor 进行多字段排序的比较器（Part 4B）。
+ * A comparator for multi-field sorting of visitors (Part 4B).
  *
- * 排序优先级：
- *  1) fastPass = true 的排在前面；
- *  2) ticketType 优先级：VIP -> Adult -> Child -> 其他；
- *  3) 年龄从大到小（年龄大的排前面）；
- *  4) fullName 按字母顺序升序（忽略大小写）。
+ * Sorting priority:
+ *  1) Visitors with fastPass = true come first;
+ *  2) ticketType priority: VIP -> Adult -> Child -> Others;
+ *  3) Age in descending order (older visitors come first);
+ *  4) fullName in ascending alphabetical order (case-insensitive).
  */
 public class VisitorComparator implements Comparator<Visitor> {
 
     /**
-     * 给不同的票种一个“排序权重”，值越小优先级越高。
+     * Assign a "sorting weight" to different ticket types, smaller values have higher priority.
      */
     private int ticketRank(String ticketType) {
         if (ticketType == null) {
-            return Integer.MAX_VALUE; // 票种未知的排在最后
+            return Integer.MAX_VALUE; // Unknown ticket types are ranked last
         }
         String t = ticketType.trim().toUpperCase();
         switch (t) {
@@ -33,18 +33,18 @@ public class VisitorComparator implements Comparator<Visitor> {
 
     @Override
     public int compare(Visitor v1, Visitor v2) {
-        // 处理同一对象或 null 的情况
+        // Handle the same object or null cases
         if (v1 == v2) {
             return 0;
         }
         if (v1 == null) {
-            return 1; // null 视为“最大”，排最后
+            return 1; // null is considered "largest", sorted last
         }
         if (v2 == null) {
             return -1;
         }
 
-        // 1) fastPass 优先：有 fastPass 的排前面
+        // 1) fastPass priority: visitors with fastPass come first
         if (v1.isFastPass() && !v2.isFastPass()) {
             return -1;
         }
@@ -52,20 +52,20 @@ public class VisitorComparator implements Comparator<Visitor> {
             return 1;
         }
 
-        // 2) ticketType 优先级：VIP -> Adult -> Child -> 其他
+        // 2) ticketType priority: VIP -> Adult -> Child -> Others
         int t1 = ticketRank(v1.getTicketType());
         int t2 = ticketRank(v2.getTicketType());
         if (t1 != t2) {
             return Integer.compare(t1, t2);
         }
 
-        // 3) 年龄从大到小（年龄大的在前）
+        // 3) Age in descending order (older visitors come first)
         int ageCompare = Integer.compare(v2.getAge(), v1.getAge());
         if (ageCompare != 0) {
             return ageCompare;
         }
 
-        // 4) 按 fullName 字母顺序升序（忽略大小写）
+        // 4) fullName in ascending alphabetical order (case-insensitive)
         String n1 = v1.getFullName();
         String n2 = v2.getFullName();
         if (n1 == n2) {

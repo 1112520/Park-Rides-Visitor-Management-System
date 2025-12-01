@@ -10,35 +10,35 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * 主题公园中的游乐项目。
- * 实现 RideInterface，包含：
- * - 等待队列（Queue<Visitor> waitingLine） —— Part 3
- * - 游玩历史（LinkedList<Visitor> rideHistory） —— Part 4A/4B
- * - 运行一轮游乐项目 —— Part 5
- * - 导入导出历史记录 —— Part 6/7
+ * Amusement Rides in Theme Parks
+ * Implement the RideInterface, including:
+ * - Waiting queue (Queue<Visitor> waitingLine) —— Part 3
+ * - Ride history (LinkedList<Visitor> rideHistory) —— Part 4A/4B
+ * - Running one cycle of the ride —— Part 5
+ * - Importing and exporting history records —— Part 6/7
  */
 public class Ride implements RideInterface {
 
-    // ---------- 基本属性（Part 1） ----------
-    private String name;         // 项目名称，例如 "Super Coaster"
-    private String type;         // 项目类型，例如 "Roller Coaster"
-    private double minHeight;    // 最低身高限制（米）
-    private Employee operator;   // 负责操作该项目的员工
+    // ---------- Basic Attributes (Part 1) ----------
+    private String name;         // Ride name, e.g., "Super Coaster"
+    private String type;         // Ride type, e.g., "Roller Coaster"
+    private double minHeight;    // Minimum height requirement (meters)
+    private Employee operator;   // Employee responsible for operating the ride
 
-    // ---------- 运行属性（Part 5） ----------
-    private int maxRider;        // 每轮最多可以搭乘的游客数量
-    private int numOfCycles;     // 已经运行的轮数
+    // ---------- Running Attributes (Part 5) ----------
+    private int maxRider;        // Maximum number of visitors per cycle
+    private int numOfCycles;     // Number of cycles already run
 
-    // ---------- 集合：等待队列（Part 3） ----------
+    // ---------- Collections: Waiting Queue (Part 3) ----------
     private Queue<Visitor> waitingLine;
 
-    // ---------- 集合：游玩历史（Part 4A/4B） ----------
+    // ---------- Collections: Ride History (Part 4A/4B) ----------
     private LinkedList<Visitor> rideHistory;
 
-    // ---------- 构造方法 ----------
+    // ---------- Constructors ----------
 
     /**
-     * 默认构造方法（作业要求必须有）
+     * Default constructor (required by the assignment)
      */
     public Ride() {
         this.numOfCycles = 0;
@@ -47,11 +47,11 @@ public class Ride implements RideInterface {
     }
 
     /**
-     * 带参数构造方法，设置所有基本字段。
+     * Parameterized constructor, sets all basic fields.
      */
     public Ride(String name, String type, double minHeight,
                 Employee operator, int maxRider) {
-        this(); // 调用默认构造，确保队列和历史都初始化
+        this(); // Call default constructor to ensure queues and history are initialized
         this.name = name;
         this.type = type;
         this.minHeight = minHeight;
@@ -125,13 +125,13 @@ public class Ride implements RideInterface {
     }
 
     /**
-     * 只读访问 rideHistory，用于排序和演示
+     * Read-only access to rideHistory, used for sorting and demonstration
      */
     public LinkedList<Visitor> getRideHistory() {
         return rideHistory;
     }
 
-    // ---------- Part 3：等待队列相关实现 ----------
+    // ---------- Part 3: Waiting Queue Related Implementation ----------
 
     @Override
     public void addVisitorToQueue(Visitor visitor) {
@@ -170,7 +170,7 @@ public class Ride implements RideInterface {
         }
     }
 
-    // ---------- Part 4A：游玩历史（LinkedList + Iterator） ----------
+    // ---------- Part 4A: Ride History (LinkedList + Iterator) ----------
 
     @Override
     public void addVisitorToHistory(Visitor visitor) {
@@ -209,7 +209,7 @@ public class Ride implements RideInterface {
     }
 
     /**
-     * 使用 Iterator 打印历史记录（作业明确要求）
+     * Print ride history using Iterator (explicitly required by the assignment)
      */
     @Override
     public void printRideHistory() {
@@ -228,10 +228,10 @@ public class Ride implements RideInterface {
         }
     }
 
-    // ---------- Part 4B：排序历史记录 ----------
+    // ---------- Part 4B: Sorting Ride History ----------
 
     /**
-     * 使用给定的 Comparator 对历史记录排序。
+     * Sort ride history using the given Comparator.
      */
     public void sortRideHistory(Comparator<Visitor> comparator) {
         if (rideHistory.isEmpty()) {
@@ -242,11 +242,11 @@ public class Ride implements RideInterface {
         System.out.println("Ride history for " + name + " has been sorted.");
     }
 
-    // ---------- Part 5：运行一轮游乐项目 ----------
+    // ---------- Part 5: Running One Cycle of the Ride ----------
 
     @Override
     public void runOneCycle() {
-        // 从等待队列中取出最多 maxRider 个游客，加入历史记录
+        // Take up to maxRider visitors from the waiting queue and add them to the history
         if (operator == null) {
             System.out.println("Cannot run " + name + " because there is no operator assigned.");
             return;
@@ -275,20 +275,26 @@ public class Ride implements RideInterface {
         System.out.println(name + " has now run " + numOfCycles + " cycle(s).");
     }
 
-    // ---------- Part 6：导出历史记录到 CSV 文件 ----------
+    // ---------- Part 6: Export Ride History to CSV File (with Enhanced Validation) ----------
 
     /**
-     * 将 rideHistory 导出为简单的 CSV 文件。
-     * 每行格式：id,fullName,age,ticketType,fastPass
+     * Export rideHistory to a simple CSV file.
+     * Each line format: id,fullName,age,ticketType,fastPass
      */
     public void exportRideHistory(String fileName) {
+        // New addition: File name validation
+        if (fileName == null || fileName.isBlank()) {
+            System.out.println("File name cannot be null or blank. Export cancelled.");
+            return;
+        }
+
         if (rideHistory.isEmpty()) {
             System.out.println("No visitors in ride history of " + name + " to export.");
             return;
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            // 写表头（可选）
+            //Write a table header (optional).
             writer.write("id,fullName,age,ticketType,fastPass");
             writer.newLine();
 
@@ -305,21 +311,27 @@ public class Ride implements RideInterface {
 
             System.out.println("Ride history for " + name + " has been exported to file: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error exporting ride history to file: " + e.getMessage());
+            System.out.println("Error exporting ride history to file '" + fileName + "': " + e.getMessage());
         }
     }
 
-    // ---------- Part 7：从 CSV 文件导入历史记录 ----------
+    // ---------- Part 7: Import Ride History from CSV File (with Enhanced Validation) ----------
 
     /**
-     * 从 CSV 文件导入 rideHistory，文件格式需与 exportRideHistory 输出一致。
-     * 导入前会清空当前历史记录。
+     * Import rideHistory from a CSV file, the file format should be consistent with exportRideHistory output.
+     * The current history will be cleared before importing.
      */
     public void importRideHistory(String fileName) {
-        rideHistory.clear(); // 先清空当前历史
+        // New addition: File name validation
+        if (fileName == null || fileName.isBlank()) {
+            System.out.println("File name cannot be null or blank. Import cancelled.");
+            return;
+        }
+
+        rideHistory.clear(); // Clear current history
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line = reader.readLine(); // 先读掉表头
+            String line = reader.readLine(); // Read and discard header
 
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) {
@@ -349,7 +361,7 @@ public class Ride implements RideInterface {
 
             System.out.println("Ride history for " + name + " has been imported from file: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error importing ride history from file: " + e.getMessage());
+            System.out.println("Error importing ride history from file '" + fileName + "': " + e.getMessage());
         }
     }
 

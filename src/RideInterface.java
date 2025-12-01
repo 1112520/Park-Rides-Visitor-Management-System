@@ -1,17 +1,17 @@
 /**
- * Ride 的接口，定义了等待队列、历史记录和运行一轮等操作。
- * 对应作业 Part 2 中的接口要求。
+ * The interface of Ride defines operations such as waiting queues, history records, and running a round.
+ * Corresponds to the interface requirements in Assignment Part 2.
  */
 public interface RideInterface {
 
-    // Part 3：排队队列
+    // Part 3: Waiting Queue
     void addVisitorToQueue(Visitor visitor);
 
     Visitor removeVisitorFromQueue();
 
     void printQueue();
 
-    // Part 4A：历史记录
+    // Part 4A: Ride History
     void addVisitorToHistory(Visitor visitor);
 
     boolean checkVisitorFromHistory(Visitor visitor);
@@ -20,7 +20,7 @@ public interface RideInterface {
 
     void printRideHistory();
 
-    // Part 5：运行一轮
+    // Part 5: Running One Cycle
     void runOneCycle();
 }
 

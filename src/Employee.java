@@ -1,11 +1,11 @@
 /**
- * 主题公园的员工。
- * 继承自 Person，增加职位和时薪等属性。
+ * Theme Park Employees
+ * Inherits from Person, with additional attributes such as job position and hourly wage。
  */
 public class Employee extends Person {
 
-    private String position;   // 职位，例如 "Ride Operator"
-    private double hourlyRate; // 时薪
+    private String position;   // Job position: e.g., "Ride Operator"
+    private double hourlyRate; // Hourly wage
 
     public Employee() {
         super();

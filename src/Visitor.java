@@ -1,11 +1,11 @@
 /**
- * 主题公园的游客。
- * 继承自 Person，增加票种和是否快速通行等属性。
+ * Visitors to the theme park.
+ * Inherits from Person, adding attributes for ticket type and whether they have a fast pass.
  */
 public class Visitor extends Person {
 
-    private String ticketType; // 如 "Adult", "Child", "VIP"
-    private boolean fastPass;  // 是否持有快速通行证
+    private String ticketType; // e.g., "Adult", "Child", "VIP"
+    private boolean fastPass;  // Whether the visitor has a fast pass
 
     public Visitor() {
         super();
@@ -14,7 +14,7 @@ public class Visitor extends Person {
     public Visitor(String id, String fullName, int age,
                    String ticketType, boolean fastPass) {
         super(id, fullName, age);
-        // 使用 setter 保证校验
+        // Use setters to ensure validation
         setTicketType(ticketType);
         setFastPass(fastPass);
     }
